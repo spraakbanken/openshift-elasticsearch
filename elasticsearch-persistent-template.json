@@ -15,6 +15,37 @@
   },
   "objects": [
     {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "elasticsearch",
+        "annotations": {
+          "openshift.io/display-name": "Elasticsearch"
+        }
+      },
+      "spec": {
+        "tags": [
+          {
+            "name": "6.5.1",
+            "annotations": {
+              "openshift.io/display-name": "Elasticsearch 6.5.1",
+              "openshift.io/provider-display-name": "",
+              "description": "Provides a Elasticsearch 6.5.1",
+              "tags": "database,elasticsearch",
+              "version": "6.5.1"
+            },
+            "from": {
+              "kind": "DockerImage",
+              "name": "docker.elastic.co/elasticsearch/elasticsearch:6.5.1"
+            },
+            "referencePolicy": {
+              "type": "Local"
+            }
+          }
+        ]
+      }
+    },
+    {
       "kind": "Service",
       "apiVersion": "v1",
       "metadata": {
@@ -157,8 +188,7 @@
     {
       "name": "NAMESPACE",
       "displayName": "Namespace",
-      "description": "The OpenShift Namespace where the ImageStream resides.",
-      "value": "openshift"
+      "description": "The OpenShift Namespace where the ImageStream resides."
     },
     {
       "name": "DATABASE_SERVICE_NAME",
@@ -172,6 +202,13 @@
       "displayName": "Volume Capacity",
       "description": "Volume space available for data, e.g. 512Mi, 2Gi.",
       "value": "1Gi",
+      "required": true
+    },
+    {
+      "name": "ELASTICSEARCH_VERSION",
+      "displayName": "Elasticsearch version",
+      "description": "Version number for Elasticsearch release",
+      "value": "6.5.1",
       "required": true
     }
   ]
