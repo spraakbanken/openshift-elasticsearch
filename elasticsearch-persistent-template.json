@@ -1,0 +1,178 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "elasticsearch-persistent",
+    "annotations": {
+      "openshift.io/display-name": "Elasticsearch",
+      "description": "elasticsearch persistent",
+      "tags": "database,elasticsearch"
+    }
+  },
+  "message": "The following service(s) have been created in your project: ${DATABASE_SERVICE_NAME}.\n\n  URL: ${DATABASE_SERVICE_NAME}:9200/",
+  "labels": {
+    "template": "elasticsearch-persistent-template"
+  },
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${DATABASE_SERVICE_NAME}",
+        "annotations": {
+          "template.openshift.io/expose-uri": "TODO"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "elasticsearch",
+            "port": 9200
+          }
+        ],
+        "selector": {
+          "name": "${DATABASE_SERVICE_NAME}"
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${DATABASE_SERVICE_NAME}"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "${VOLUME_CAPACITY}"
+          }
+        }
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${DATABASE_SERVICE_NAME}",
+        "annotations": {
+          "template.alpha.openshift.io/wait-for-ready": "true"
+        }
+      },
+      "spec": {
+        "strategy": {
+          "type": "Recreate"
+        },
+        "triggers": [
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "elasticsearch"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "elasticsearch:${ELASTICSEARCH_VERSION}",
+                "namespace": "${NAMESPACE}"
+              }
+            }
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "${DATABASE_SERVICE_NAME}"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "name": "${DATABASE_SERVICE_NAME}"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "elasticsearch",
+                "image": " ",
+                "ports": [
+                  {
+                    "containerPort": 9200
+                  }
+                ],
+                "readinessProbe": {
+                  "timeoutSeconds": 1,
+                  "initialDelaySeconds": 5,
+                  "exec": {
+                    "command": [ "/bin/sh", "-i", "-c",
+                      "echo 'TODO'"]
+                  }
+                },
+                "livenessProbe": {
+                  "timeoutSeconds": 1,
+                  "initialDelaySeconds": 30,
+                  "tcpSocket": {
+                    "port": 9200
+                  }
+                },
+                "resources": {
+                  "limits": {
+                    "memory": "${MEMORY_LIMIT}"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "${DATABASE_SERVICE_NAME}-data",
+                    "mountPath": "/usr/share/elasticsearch/data"
+                  }
+                ],
+                "imagePullPolicy": "IfNotPresent"
+              }
+            ],
+            "volumes": [
+              {
+                "name": "${DATABASE_SERVICE_NAME}-data",
+                "persistentVolumeClaim": {
+                  "claimName": "${DATABASE_SERVICE_NAME}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "MEMORY_LIMIT",
+      "displayName": "Memory Limit",
+      "description": "Maximum amount of memory the container can use.",
+      "value": "512Mi",
+      "required": true
+    },
+    {
+      "name": "NAMESPACE",
+      "displayName": "Namespace",
+      "description": "The OpenShift Namespace where the ImageStream resides.",
+      "value": "openshift"
+    },
+    {
+      "name": "DATABASE_SERVICE_NAME",
+      "displayName": "Database Service Name",
+      "description": "The name of the OpenShift Service exposed for the database.",
+      "value": "elasticsearch",
+      "required": true
+    },
+    {
+      "name": "VOLUME_CAPACITY",
+      "displayName": "Volume Capacity",
+      "description": "Volume space available for data, e.g. 512Mi, 2Gi.",
+      "value": "1Gi",
+      "required": true
+    }
+  ]
+}
