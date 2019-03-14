@@ -133,6 +133,9 @@
                 "ports": [
                   {
                     "containerPort": 9200
+                  },
+                  {
+                    "containerPort": 9300
                   }
                 ],
                 "readinessProbe": {
@@ -148,11 +151,6 @@
                   "initialDelaySeconds": 30,
                   "tcpSocket": {
                     "port": 9200
-                  }
-                },
-                "resources": {
-                  "limits": {
-                    "memory": "${MEMORY_LIMIT}"
                   }
                 },
                 "volumeMounts": [
