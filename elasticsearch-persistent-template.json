@@ -30,13 +30,13 @@
             "annotations": {
               "openshift.io/display-name": "Elasticsearch 6.5.1",
               "openshift.io/provider-display-name": "",
-              "description": "Provides a Elasticsearch 6.5.1",
+              "description": "Provides Elasticsearch 6.5.1",
               "tags": "database,elasticsearch",
               "version": "6.5.1"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "docker.elastic.co/elasticsearch/elasticsearch:6.5.1"
+              "name": "docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.1"
             },
             "referencePolicy": {
               "type": "Local"
