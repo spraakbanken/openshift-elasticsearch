@@ -18,7 +18,7 @@
       "kind": "ImageStream",
       "apiVersion": "v1",
       "metadata": {
-        "name": "elasticsearch",
+        "name": "elasticsearch-oss",
         "annotations": {
           "openshift.io/display-name": "Elasticsearch"
         }
@@ -106,7 +106,7 @@
               ],
               "from": {
                 "kind": "ImageStreamTag",
-                "name": "elasticsearch:${ELASTICSEARCH_VERSION}",
+                "name": "elasticsearch-oss:${ELASTICSEARCH_VERSION}",
                 "namespace": "${NAMESPACE}"
               }
             }
