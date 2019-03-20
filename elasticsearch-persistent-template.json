@@ -159,7 +159,10 @@
                     "mountPath": "/usr/share/elasticsearch/data"
                   }
                 ],
-                "imagePullPolicy": "IfNotPresent"
+                "imagePullPolicy": "IfNotPresent",
+                "env": [
+                  { "name": "ES_JAVA_OPTS", "value": "${ES_JAVA_OPTS}"}
+                ]
               }
             ],
             "volumes": [
@@ -179,8 +182,15 @@
     {
       "name": "MEMORY_LIMIT",
       "displayName": "Memory Limit",
-      "description": "Maximum amount of memory the container can use.",
-      "value": "512Mi",
+      "description": "Maximum amount of memory the container can use. Should be larger than the given size for Elasticsearch.",
+      "value": "2Gi",
+      "required": true
+    },
+    {
+      "name": "ES_JAVA_OPTS",
+      "displayName": "Elasticsearch heap size",
+      "description": "Memory size for Elasticsearch",
+      "value": "-Xms1g -Xmx1g",
       "required": true
     },
     {
