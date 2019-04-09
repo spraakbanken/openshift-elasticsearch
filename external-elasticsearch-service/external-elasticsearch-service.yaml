@@ -1,0 +1,15 @@
+kind: "Service"
+apiVersion: "v1"
+metadata:
+  name: "external-elasticsearch-service"
+spec:
+  ports:
+    -
+      name: "elasticsearch"
+      protocol: "TCP"
+      port: 9200
+      targetPort: <targetPort>
+      nodePort: 0
+  externalIPs:
+  - <IP4-address>
+selector: {}
